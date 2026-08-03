@@ -58,7 +58,7 @@ export default function MusicPlayer() {
           <div className="text-center text-white p-8 animate-fade-in">
             <div className="text-6xl mb-4 animate-heartbeat">💒</div>
             <p className="text-2xl mb-2" style={{ fontFamily: "var(--font-great-vibes)" }}>
-              Hoàng Đạt & [Tên Cô Dâu]
+              Hoàng Đạt & Đỗ Mai
             </p>
             <p className="text-sm text-white/70 mb-6">Nhấn vào bất kỳ đâu để mở thiệp</p>
             <div className="w-16 h-16 mx-auto rounded-full border-2 border-white/50 flex items-center justify-center animate-bounce">
