@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💒 Thiệp Cưới Online
 
-## Getting Started
+Trang thiệp cưới online được xây dựng bằng Next.js + TailwindCSS, deploy trên Vercel.
 
-First, run the development server:
+## Tính năng
+
+- 🎨 Giao diện đẹp, responsive trên mọi thiết bị
+- 🎵 Nhạc nền tự động phát
+- ⏰ Đồng hồ đếm ngược đến ngày cưới
+- 📝 Form xác nhận tham dự (RSVP)
+- 💕 Phần câu chuyện tình yêu
+- ✨ Animation mượt mà
+
+## Cách sử dụng
+
+### 1. Cá nhân hóa nội dung
+
+Chỉnh sửa trong `src/app/page.tsx`:
+- Thay `[Tên Cô Dâu]` bằng tên cô dâu
+- Thay `[Địa chỉ nhà gái]` và `[Địa chỉ nhà trai / nhà hàng]` bằng địa chỉ thật
+- Cập nhật câu chuyện tình yêu
+
+Chỉnh sửa trong `src/app/components/CountdownTimer.tsx`:
+- Thay đổi `WEDDING_DATE` thành ngày cưới thật
+
+Chỉnh sửa trong `src/app/layout.tsx`:
+- Cập nhật metadata (title, description)
+
+### 2. Thêm nhạc nền
+
+Đặt file nhạc MP3 vào `public/music/wedding-song.mp3`
+
+### 3. Chạy local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Truy cập http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Deploy lên Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push code lên GitHub
+2. Vào [vercel.com](https://vercel.com), đăng nhập bằng GitHub
+3. Import repository này
+4. Click "Deploy" — xong!
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js 16](https://nextjs.org)
+- [TailwindCSS 4](https://tailwindcss.com)
+- [TypeScript](https://typescriptlang.org)
+- [Vercel](https://vercel.com) (hosting)
