@@ -1,35 +1,77 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function MusicPlayer() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false);
+  const [started, setStarted] = useState(false);
 
-  const toggleMusic = useCallback(() => {
-    if (!isPlaying) {
-      setShowPlayer(true);
-      setIsPlaying(true);
-    } else {
-      setShowPlayer(false);
+  // Auto-play khi user tương tác lần đầu (click/touch bất kỳ đâu trên trang)
+  useEffect(() => {
+    const handleInteraction = () => {
+      if (!started) {
+        setStarted(true);
+        setIsPlaying(true);
+      }
+      document.removeEventListener("click", handleInteraction);
+      document.removeEventListener("touchstart", handleInteraction);
+      document.removeEventListener("scroll", handleInteraction);
+    };
+
+    document.addEventListener("click", handleInteraction);
+    document.addEventListener("touchstart", handleInteraction);
+    document.addEventListener("scroll", handleInteraction);
+
+    return () => {
+      document.removeEventListener("click", handleInteraction);
+      document.removeEventListener("touchstart", handleInteraction);
+      document.removeEventListener("scroll", handleInteraction);
+    };
+  }, [started]);
+
+  const toggleMusic = () => {
+    if (isPlaying) {
       setIsPlaying(false);
+    } else {
+      setStarted(true);
+      setIsPlaying(true);
     }
-  }, [isPlaying]);
+  };
 
   return (
     <>
       {/* Hidden YouTube iframe player */}
-      {showPlayer && (
+      {isPlaying && (
         <iframe
           ref={iframeRef}
-          className="fixed -top-[9999px] -left-[9999px] w-0 h-0"
+          className="fixed -top-[9999px] -left-[9999px] w-0 h-0 pointer-events-none"
           src="https://www.youtube.com/embed/DuEntVujr5U?autoplay=1&loop=1&playlist=DuEntVujr5U"
           allow="autoplay"
           title="Wedding Music"
         />
       )}
 
+      {/* Hint overlay - hiện khi chưa bật nhạc */}
+      {!started && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="text-center text-white p-8 animate-fade-in">
+            <div className="text-6xl mb-4 animate-heartbeat">💒</div>
+            <p className="text-2xl mb-2" style={{ fontFamily: "var(--font-great-vibes)" }}>
+              Hoàng Đạt & [Tên Cô Dâu]
+            </p>
+            <p className="text-sm text-white/70 mb-6">Nhấn vào bất kỳ đâu để mở thiệp</p>
+            <div className="w-16 h-16 mx-auto rounded-full border-2 border-white/50 flex items-center justify-center animate-bounce">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Nút bật/tắt nhạc */}
       <button
         onClick={toggleMusic}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:bg-primary-dark transition-all duration-300 hover:scale-110"
