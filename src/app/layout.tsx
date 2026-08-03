@@ -15,7 +15,7 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: "Thiệp Cưới - Hoàng Đạt & [Tên Cô Dâu]",
+  title: "Thiệp Cưới - Hoàng Đạt & Đỗ Mai",
   description: "Trân trọng kính mời bạn đến dự lễ cưới của chúng tôi",
   openGraph: {
     title: "Thiệp Cưới - Hoàng Đạt & Đỗ Mai",

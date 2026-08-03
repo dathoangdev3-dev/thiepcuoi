@@ -37,7 +37,7 @@ export default function Home() {
             className="text-5xl md:text-7xl lg:text-8xl text-primary-dark mb-8 animate-fade-in-up delay-400"
             style={{ fontFamily: "var(--font-great-vibes)" }}
           >
-            [Tên Cô Dâu]
+            Đỗ Mai
           </h1>
 
           <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-8 animate-fade-in delay-600" />
@@ -183,7 +183,7 @@ export default function Home() {
           className="text-3xl mb-4"
           style={{ fontFamily: "var(--font-great-vibes)" }}
         >
-          Hoàng Đạt & [Tên Cô Dâu]
+          Hoàng Đạt & Đỗ Mai
         </p>
         <p className="text-sm text-white/50">20.12.2026 • Made with ❤️</p>
       </footer>
