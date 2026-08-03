@@ -1,50 +1,35 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 
 export default function MusicPlayer() {
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
 
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      if (audioRef.current && !isPlaying) {
-        audioRef.current.play().then(() => {
-          setIsPlaying(true);
-        }).catch(() => {
-          // Autoplay blocked, user needs to click
-        });
-      }
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("touchstart", handleFirstInteraction);
-    };
-
-    document.addEventListener("click", handleFirstInteraction);
-    document.addEventListener("touchstart", handleFirstInteraction);
-
-    return () => {
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("touchstart", handleFirstInteraction);
-    };
-  }, [isPlaying]);
-
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play();
+  const toggleMusic = useCallback(() => {
+    if (!isPlaying) {
+      setShowPlayer(true);
       setIsPlaying(true);
+    } else {
+      setShowPlayer(false);
+      setIsPlaying(false);
     }
-  };
+  }, [isPlaying]);
 
   return (
     <>
-      <audio ref={audioRef} loop preload="auto">
-        <source src="/music/wedding-song.mp3" type="audio/mpeg" />
-      </audio>
+      {/* Hidden YouTube iframe player */}
+      {showPlayer && (
+        <iframe
+          ref={iframeRef}
+          className="fixed -top-[9999px] -left-[9999px] w-0 h-0"
+          src="https://www.youtube.com/embed/DuEntVujr5U?autoplay=1&loop=1&playlist=DuEntVujr5U"
+          allow="autoplay"
+          title="Wedding Music"
+        />
+      )}
+
       <button
         onClick={toggleMusic}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:bg-primary-dark transition-all duration-300 hover:scale-110"
