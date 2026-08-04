@@ -1,70 +1,99 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export default function MusicPlayer() {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [started, setStarted] = useState(false);
 
-  // Auto-play khi user tương tác lần đầu (click/touch bất kỳ đâu trên trang)
+  const playAudio = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.5;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          // Retry with user gesture
+          setIsPlaying(false);
+        });
+    }
+  }, []);
+
+  // Bắt sự kiện tương tác đầu tiên để phát nhạc
   useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    // Preload audio sẵn
+    audio.load();
+
     const handleInteraction = () => {
       if (!started) {
         setStarted(true);
-        setIsPlaying(true);
+        playAudio();
       }
       document.removeEventListener("click", handleInteraction);
       document.removeEventListener("touchstart", handleInteraction);
-      document.removeEventListener("scroll", handleInteraction);
+      document.removeEventListener("touchend", handleInteraction);
     };
 
     document.addEventListener("click", handleInteraction);
     document.addEventListener("touchstart", handleInteraction);
-    document.addEventListener("scroll", handleInteraction);
+    document.addEventListener("touchend", handleInteraction);
 
     return () => {
       document.removeEventListener("click", handleInteraction);
       document.removeEventListener("touchstart", handleInteraction);
-      document.removeEventListener("scroll", handleInteraction);
+      document.removeEventListener("touchend", handleInteraction);
     };
-  }, [started]);
+  }, [started, playAudio]);
 
   const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (!started) {
+      setStarted(true);
+      playAudio();
+      return;
+    }
+
     if (isPlaying) {
+      audio.pause();
       setIsPlaying(false);
     } else {
-      setStarted(true);
-      setIsPlaying(true);
+      playAudio();
     }
   };
 
   return (
     <>
-      {/* Hidden YouTube iframe player */}
-      {isPlaying && (
-        <iframe
-          ref={iframeRef}
-          className="fixed -top-[9999px] -left-[9999px] w-0 h-0 pointer-events-none"
-          src="https://www.youtube.com/embed/DuEntVujr5U?autoplay=1&loop=1&playlist=DuEntVujr5U"
-          allow="autoplay"
-          title="Wedding Music"
-        />
-      )}
+      <audio
+        ref={audioRef}
+        loop
+        preload="auto"
+        playsInline
+        src="/music/wedding-song.mp3"
+      />
 
-      {/* Hint overlay - hiện khi chưa bật nhạc */}
+      {/* Overlay mở thiệp - biến mất sau khi click */}
       {!started && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm cursor-pointer">
           <div className="text-center text-white p-8 animate-fade-in">
             <div className="text-6xl mb-4 animate-heartbeat">💒</div>
             <p className="text-2xl mb-2" style={{ fontFamily: "var(--font-great-vibes)" }}>
               Hoàng Đạt & Đỗ Mai
             </p>
-            <p className="text-sm text-white/70 mb-6">Nhấn vào bất kỳ đâu để mở thiệp</p>
+            <p className="text-sm text-white/70 mb-6">Nhấn để mở thiệp cưới</p>
             <div className="w-16 h-16 mx-auto rounded-full border-2 border-white/50 flex items-center justify-center animate-bounce">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-8 h-8">
+                <path d="M8 5v14l11-7z"/>
               </svg>
             </div>
           </div>
